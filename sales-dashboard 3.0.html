@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales War Room — MADEBYIZAN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow+Semi+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111;--s2:#161616;
+  --b1:#1e1e1e;--b2:#282828;
+  --or:#f04e2a;--orhi:#ff6040;
+  --orlo:rgba(240,78,42,.10);--ormd:rgba(240,78,42,.20);--orbdr:rgba(240,78,42,.35);
+  --txt:#fff;--mid:#888;--dim:#3a3a3a;
+  --hd:'Barlow',sans-serif;
+  --cn:'Barlow Condensed',sans-serif;
+  --sc:'Barlow Semi Condensed',sans-serif;
+}
+html{font-size:14px}
+body{background:var(--bg);color:var(--txt);font-family:var(--hd);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+.shell{max-width:1440px;margin:0 auto;padding:0 32px 80px}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:26px 0 22px;border-bottom:1px solid var(--b1);margin-bottom:40px}
+.wm{font-family:var(--cn);font-weight:700;font-size:1rem;letter-spacing:.22em;text-transform:uppercase;color:var(--txt)}
+.hc{font-family:var(--cn);font-weight:400;font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.hr{display:flex;align-items:center;gap:16px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--or);padding:6px 14px;font-family:var(--cn);font-weight:600;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--or);animation:blink 1.8s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+#rt{font-family:var(--cn);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+/* ERROR BANNER */
+.err{border:1px solid var(--orbdr);background:var(--orlo);padding:14px 18px;margin-bottom:36px;font-family:var(--sc);font-size:.75rem;color:var(--orhi);line-height:1.8;display:none}
+.err code{background:var(--ormd);padding:1px 6px;font-family:monospace;font-size:.7rem}
+
+/* SECTION LABEL */
+.sec{font-family:var(--cn);font-weight:400;font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);margin-bottom:18px;display:flex;align-items:center;gap:16px}
+.sec::after{content:'';flex:1;height:1px;background:var(--b1)}
+
+/* KPI GRID */
+.kg{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--b1);outline:1px solid var(--b1);margin-bottom:48px}
+@media(max-width:1200px){.kg{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:800px){.kg{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.kg{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--bg);padding:24px 20px 20px;position:relative;cursor:default;transition:background .12s}
+.kpi:hover{background:var(--s1)}
+.kbar{position:absolute;top:0;left:0;right:0;height:2px;background:var(--b2)}
+.kpi.hot .kbar{background:var(--or)}
+.klbl{font-family:var(--cn);font-weight:500;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:12px}
+.kbig{font-family:var(--hd);font-weight:800;font-size:2.5rem;line-height:1;letter-spacing:-.03em;color:var(--txt);margin-bottom:14px}
+.kpi.hot .kbig{color:var(--or)}
+.ksub{border-top:1px solid var(--b1);padding-top:11px;display:flex;flex-direction:column;gap:5px}
+.kr{display:flex;justify-content:space-between;align-items:baseline}
+.kk{font-family:var(--sc);font-weight:300;font-size:.62rem;color:var(--dim)}
+.kv{font-family:var(--cn);font-weight:600;font-size:.62rem;letter-spacing:.04em;color:var(--mid)}
+
+/* CARD */
+.card{background:var(--bg);border:1px solid var(--b1);padding:24px}
+.ct{font-family:var(--hd);font-weight:700;font-size:.9rem;letter-spacing:-.01em;color:var(--txt);margin-bottom:22px}
+.ct em{font-style:normal;color:var(--or)}
+
+/* GRID LAYOUTS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b1);outline:1px solid var(--b1);margin-bottom:48px}
+.g2 .card{border:none}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
+
+/* HEAD TO HEAD */
+.vs{display:grid;grid-template-columns:1fr 52px 1fr;gap:1px;background:var(--b1);outline:1px solid var(--b1);margin-bottom:48px}
+.vsp{background:var(--bg);padding:26px 24px}
+.vsdiv{background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--cn);font-weight:600;font-size:.6rem;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.vsn{font-family:var(--hd);font-weight:900;font-size:2.2rem;letter-spacing:-.04em;color:var(--txt);margin-bottom:18px;line-height:1}
+.vsn.or{color:var(--or)}
+.vsr{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--b1)}
+.vsr:last-child{border:none;padding-bottom:0}
+.vslbl{font-family:var(--sc);font-weight:300;font-size:.72rem;color:var(--mid)}
+.vsval{font-family:var(--cn);font-weight:700;font-size:.82rem;letter-spacing:.02em;color:var(--txt)}
+.vsval.or{color:var(--or)}
+
+/* BAR CHART */
+.bc{display:flex;flex-direction:column;gap:12px}
+.br{display:flex;align-items:center;gap:10px}
+.bn{width:120px;flex-shrink:0;text-align:right;font-family:var(--sc);font-weight:300;font-size:.68rem;color:var(--mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt{flex:1;height:20px;background:var(--s2);position:relative;overflow:hidden}
+.bf{position:absolute;top:0;left:0;height:100%;background:var(--or);display:flex;align-items:center;padding-left:8px;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+.bf span{font-family:var(--cn);font-weight:600;font-size:.6rem;letter-spacing:.06em;color:#fff;white-space:nowrap}
+.bv{font-family:var(--cn);font-weight:600;font-size:.65rem;color:var(--mid);width:46px;text-align:right;flex-shrink:0}
+
+/* FUNNEL */
+.fn{display:flex;flex-direction:column}
+.fr{display:grid;grid-template-columns:54px 1fr 44px;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--b1)}
+.fr:last-child{border:none}
+.fnum{font-family:var(--hd);font-weight:800;font-size:1.7rem;letter-spacing:-.04em;color:var(--or);text-align:right;line-height:1}
+.flbl{font-family:var(--sc);font-weight:400;font-size:.76rem;color:var(--txt);margin-bottom:5px}
+.fbar{height:2px;background:var(--b2)}
+.fbarfill{height:100%;background:var(--or);transition:width 1s ease}
+.fconv{font-family:var(--cn);font-weight:600;font-size:.62rem;letter-spacing:.06em;color:var(--dim);text-align:right}
+
+/* OUTCOMES */
+.ol{display:flex;flex-direction:column;gap:10px}
+.oi{display:flex;align-items:center;gap:10px}
+.odot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.oname{font-family:var(--sc);font-weight:300;font-size:.72rem;color:var(--mid);flex:1}
+.obw{width:66px}
+.ob{height:2px;background:var(--b2)}
+.obf{height:100%;transition:width 1s ease}
+.on{font-family:var(--cn);font-weight:700;font-size:.68rem;color:var(--txt);width:22px;text-align:right}
+.op{font-family:var(--cn);font-weight:400;font-size:.62rem;color:var(--dim);width:30px;text-align:right}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-family:var(--cn);font-weight:500;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);padding:10px 16px;text-align:left;border-bottom:1px solid var(--b2);white-space:nowrap}
+td{font-family:var(--sc);font-weight:300;font-size:.76rem;color:var(--mid);padding:10px 16px;border-bottom:1px solid var(--b1);white-space:nowrap}
+tr:hover td{background:var(--s1)}
+td.s{color:var(--txt);font-weight:500}
+.badge{font-family:var(--cn);font-weight:600;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;display:inline-block}
+.bw{background:var(--orlo);color:var(--orhi);border:1px solid var(--orbdr)}
+.bm{background:transparent;color:var(--dim);border:1px solid var(--b2)}
+.bp{background:rgba(255,183,0,.06);color:#886600;border:1px solid rgba(255,183,0,.18)}
+.bo{background:transparent;color:var(--dim);border:1px solid var(--b1)}
+
+/* LOADING */
+.ld{display:flex;align-items:center;justify-content:center;height:70px;font-family:var(--cn);font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);gap:10px}
+.spin{width:12px;height:12px;border:1px solid var(--b2);border-top-color:var(--or);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FOOTER */
+footer{margin-top:64px;padding:20px 0;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center}
+.fm{font-family:var(--cn);font-weight:700;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.fn2{font-family:var(--cn);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header>
+  <div class="wm">MADEBYIZAN</div>
+  <div class="hc">Sales War Room / Live Dashboard</div>
+  <div class="hr">
+    <div class="pill"><span class="dot"></span>Live</div>
+    <div id="rt">—</div>
+  </div>
+</header>
+
+<div class="err" id="errBanner"></div>
+
+<div class="sec">Performance</div>
+<div class="kg" id="kpiGrid"><div class="ld" style="grid-column:1/-1"><span class="spin"></span>Loading...</div></div>
+
+<div class="sec">Closers</div>
+<div class="vs" id="versus"><div class="ld" style="grid-column:1/-1"><span class="spin"></span></div></div>
+
+<div class="sec">Breakdown</div>
+<div class="g2">
+  <div class="card">
+    <div class="ct">Call <em>Outcomes</em></div>
+    <div class="ol" id="outcomeList"><div class="ld"><span class="spin"></span></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Setter <em>Funnel</em></div>
+    <div class="fn" id="setterFunnel"><div class="ld"><span class="spin"></span></div></div>
+  </div>
+</div>
+
+<div class="sec">Revenue &amp; Sources</div>
+<div class="g2">
+  <div class="card">
+    <div class="ct">Close Rate by <em>Lead Source</em></div>
+    <div class="bc" id="sourceChart"><div class="ld"><span class="spin"></span></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Cash Collected — <em>Last 7 Days</em></div>
+    <div class="bc" id="revenueChart"><div class="ld"><span class="spin"></span></div></div>
+  </div>
+</div>
+
+<div class="sec">Recent Calls</div>
+<div class="card" style="padding:0">
+  <div class="tw">
+    <table>
+      <thead><tr>
+        <th>Date</th><th>Closer</th><th>Setter</th>
+        <th>Lead Source</th><th>Outcome</th>
+        <th>Offer?</th><th>Cash (£)</th><th>Contract (£)</th>
+      </tr></thead>
+      <tbody id="recentBody"><tr><td colspan="8"><div class="ld"><span class="spin"></span></div></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div class="fm">MADEBYIZAN</div>
+  <div class="fn2">Sales War Room · Auto-refreshes every 2 min</div>
+</footer>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   SHEET IDs — already set, no changes needed
+══════════════════════════════════════════════════════ */
+var CALL_PUB = "2PACX-1vQOoBuMMa46d495_KGTD7_KRWE5ByJfa7yb23XTwKc_70d95Z68elltEGWGF8Id3ZCBCBuQM5qTTAJO";
+var EOD_PUB  = "2PACX-1vTfM94mddC2WUOuVcB3Vkod1eery810VmTIaWqoAt2zSPuvMoiwg3CWYC1bkVjq0hpt_IeL3Fp2UNc4";
+/* ══════════════════════════════════════════════════════ */
+
+var CLOSED=["Deposit Collected","Closed (Payment Plan)","Closed (PIF)","Follow Up Payment"];
+var OCOLS={
+  "Closed (PIF)":"#f04e2a","Closed (Payment Plan)":"#ff6040",
+  "Deposit Collected":"#ff7a58","Follow Up Payment":"#ff9a80",
+  "Pitched - Not Closed (Fear)":"#b87000","Pitched - Not Closed (Logistics)":"#946000",
+  "Pitched - Not Closed (Value)":"#724b00",
+  "No Show":"#2a2a2a","Rescheduled":"#242424",
+  "DQ (Budget)":"#222","DQ (Partner)":"#1e1e1e","DQ (Need)":"#1c1c1c","DQ (Time)":"#1a1a1a"
+};
+
+/* ── CSV fetch + parse ── */
+function csvUrl(pubId, gid) {
+  return "https://docs.google.com/spreadsheets/d/e/" + pubId +
+         "/pub?gid=" + (gid !== undefined ? gid : 0) +
+         "&single=true&output=csv";
+}
+
+function parseCSVLine(line) {
+  var result=[], inQ=false, cur="";
+  for(var i=0;i<line.length;i++){
+    var ch=line[i];
+    if(ch==='"'){
+      if(inQ && line[i+1]==='"'){cur+='"';i++}
+      else inQ=!inQ;
+    } else if(ch===','&&!inQ){
+      result.push(cur.trim()); cur="";
+    } else cur+=ch;
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function parseCSV(text) {
+  var lines=text.split(/\r?\n/).filter(function(l){return l.trim()});
+  if(lines.length<2) return [];
+  var headers=parseCSVLine(lines[0]);
+  var rows=[];
+  for(var i=1;i<lines.length;i++){
+    var vals=parseCSVLine(lines[i]);
+    var obj={};
+    headers.forEach(function(h,idx){ obj[h]=vals[idx]||""; });
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function fetchCSV(pubId, gid) {
+  return fetch(csvUrl(pubId, gid))
+    .then(function(r){
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return r.text();
+    })
+    .then(parseCSV);
+}
+
+/* ── helpers ── */
+function pct(n,d){return d>0?Math.round(n/d*100):0}
+function fmt(n){return isNaN(Number(n))?"0":Number(n).toLocaleString()}
+function nv(v){return parseFloat(String(v).replace(/[^0-9.-]/g,""))||0}
+function isClosed(o){return CLOSED.indexOf(o)>-1}
+function ds(v){
+  if(!v||v==="")return"—";
+  if(typeof v==="string"&&v.length>=10) return v.substring(0,10);
+  return"—";
+}
+function bc(o){
+  if(isClosed(o)) return"badge bw";
+  if(o==="No Show") return"badge bm";
+  if(o&&o.indexOf("Pitched")===0) return"badge bp";
+  return"badge bo";
+}
+function kpiHTML(label,hot,big,rows){
+  return'<div class="kpi'+(hot?' hot':'')+'">'
+    +'<div class="kbar"></div>'
+    +'<div class="klbl">'+label+'</div>'
+    +'<div class="kbig">'+big+'</div>'
+    +'<div class="ksub">'
+      +rows.map(function(r){return'<div class="kr"><span class="kk">'+r.k+'</span><span class="kv">'+r.v+'</span></div>'}).join("")
+    +'</div></div>';
+}
+
+/* ── KPIs ── */
+function renderKPIs(cr, er) {
+  var total   = cr.length;
+  var cl      = cr.filter(function(r){return isClosed(r["Call Outcome"])}).length;
+  var live    = cr.filter(function(r){return r["Call Outcome"]!=="No Show"&&r["Call Outcome"]!=="Rescheduled"}).length;
+  var ns      = cr.filter(function(r){return r["Call Outcome"]==="No Show"}).length;
+  var off     = cr.filter(function(r){return r["Offer Made?"]==="Yes"}).length;
+  var cash    = cr.reduce(function(s,r){return s+nv(r["Cash Collected Today (£) — enter 0 if none"])},0);
+  var cv      = cr.reduce(function(s,r){return s+nv(r["Total Contract Value / Revenue Generated (£) — enter 0 if none"])},0);
+
+  var setRoles=["Setter","Hybrid"];
+  var sr=er.filter(function(r){return setRoles.indexOf(r["What is your role?"])>-1});
+  var dials   = sr.reduce(function(s,r){return s+nv(r["Dials Made Today"]||r["[SETTING] Dials Made Today"])},0);
+  var sets    = sr.reduce(function(s,r){
+    return s+nv(r["How Many Sets Made Today"]||r["[SETTING] Calls You Self-Set For Today"]||0)
+             +nv(r["[SETTING] Calls You Set For Other Closers Today"]||0);
+  },0);
+  var bkd     = sr.reduce(function(s,r){return s+nv(r["Closer Calls Booked For Today (Your Sets)"])},0);
+  var shd     = sr.reduce(function(s,r){return s+nv(r["Of Those Scheduled Calls, How Many Showed?"])},0);
+
+  var html=[
+    kpiHTML("Close Rate",true, pct(cl,live)+"%",
+      [{k:"Closed",v:cl},{k:"Live Calls",v:live},{k:"All Calls",v:total}]),
+    kpiHTML("Offer → Close",false, pct(cl,off)+"%",
+      [{k:"Closed",v:cl},{k:"Offers Made",v:off}]),
+    kpiHTML("Show Rate",false, pct(Math.round(shd),Math.round(bkd))+"%",
+      [{k:"Showed",v:Math.round(shd)},{k:"Booked",v:Math.round(bkd)}]),
+    kpiHTML("Set → Show",false, pct(Math.round(shd),Math.round(sets))+"%",
+      [{k:"Showed",v:Math.round(shd)},{k:"Sets",v:Math.round(sets)}]),
+    kpiHTML("Dial → Set",false, pct(Math.round(sets),Math.round(dials))+"%",
+      [{k:"Sets",v:Math.round(sets)},{k:"Dials",v:Math.round(dials)}]),
+    kpiHTML("No Show Rate",false, pct(ns,total)+"%",
+      [{k:"No Shows",v:ns},{k:"Total Calls",v:total}]),
+    kpiHTML("Cash Collected",true, "£"+fmt(cash),
+      [{k:"Closed",v:cl},{k:"Avg/close",v:cl>0?"£"+fmt(Math.round(cash/cl)):"—"}]),
+    kpiHTML("Contract Value",false, "£"+fmt(cv),
+      [{k:"Avg deal",v:cl>0?"£"+fmt(Math.round(cv/cl)):"—"}]),
+    kpiHTML("Total Calls",false, total,
+      [{k:"Live",v:live},{k:"No Shows",v:ns},{k:"Closed",v:cl}]),
+    kpiHTML("Total Dials",false, Math.round(dials),
+      [{k:"Sets Made",v:Math.round(sets)},{k:"Dial→Set",v:pct(Math.round(sets),Math.round(dials))+"%"}]),
+    kpiHTML("Sets Made",false, Math.round(sets),
+      [{k:"Showed",v:Math.round(shd)},{k:"Closed",v:cl}]),
+    kpiHTML("Pipeline",false, "£"+fmt(cv-cash),
+      [{k:"Contract",v:"£"+fmt(cv)},{k:"Collected",v:"£"+fmt(cash)}]),
+  ];
+  document.getElementById("kpiGrid").innerHTML=html.join("");
+}
+
+/* ── Versus ── */
+function renderVersus(cr) {
+  var d={};
+  ["Nate","Bogdan"].forEach(function(c){
+    var m=cr.filter(function(r){return r["Closer Name"]===c});
+    var cl=m.filter(function(r){return isClosed(r["Call Outcome"])}).length;
+    var live=m.filter(function(r){return r["Call Outcome"]!=="No Show"&&r["Call Outcome"]!=="Rescheduled"}).length;
+    var ns=m.filter(function(r){return r["Call Outcome"]==="No Show"}).length;
+    var cash=m.reduce(function(s,r){return s+nv(r["Cash Collected Today (£) — enter 0 if none"])},0);
+    d[c]={total:m.length,cl:cl,live:live,ns:ns,cash:cash};
+  });
+  function panel(name,isOr){
+    var s=d[name]||{total:0,cl:0,live:0,ns:0,cash:0};
+    var hi=isOr?" or":"";
+    return'<div class="vsp">'
+      +'<div class="vsn'+hi+'">'+name+'</div>'
+      +'<div class="vsr"><span class="vslbl">Close Rate</span><span class="vsval'+hi+'">'+pct(s.cl,s.live)+'%</span></div>'
+      +'<div class="vsr"><span class="vslbl">Total Calls</span><span class="vsval">'+s.total+'</span></div>'
+      +'<div class="vsr"><span class="vslbl">Live Calls</span><span class="vsval">'+s.live+'</span></div>'
+      +'<div class="vsr"><span class="vslbl">Closed</span><span class="vsval">'+s.cl+'</span></div>'
+      +'<div class="vsr"><span class="vslbl">No Shows</span><span class="vsval">'+s.ns+'</span></div>'
+      +'<div class="vsr"><span class="vslbl">Cash (£)</span><span class="vsval">£'+fmt(s.cash)+'</span></div>'
+      +'</div>';
+  }
+  document.getElementById("versus").innerHTML=
+    panel("Nate",true)+'<div class="vsdiv">VS</div>'+panel("Bogdan",false);
+}
+
+/* ── Outcomes ── */
+function renderOutcomes(cr) {
+  var counts={};
+  cr.forEach(function(r){var o=r["Call Outcome"]||"Unknown";counts[o]=(counts[o]||0)+1});
+  var total=cr.length||1;
+  var keys=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a]});
+  if(!keys.length){document.getElementById("outcomeList").innerHTML='<div class="ld" style="height:40px">No data yet</div>';return}
+  document.getElementById("outcomeList").innerHTML=keys.slice(0,11).map(function(o){
+    var c=counts[o],p=pct(c,total),col=OCOLS[o]||"#1e1e1e";
+    return'<div class="oi"><div class="odot" style="background:'+col+'"></div>'
+      +'<div class="oname">'+o+'</div>'
+      +'<div class="obw"><div class="ob"><div class="obf" style="width:'+p+'%;background:'+col+'"></div></div></div>'
+      +'<div class="on">'+c+'</div><div class="op">'+p+'%</div></div>';
+  }).join("");
+}
+
+/* ── Setter Funnel ── */
+function renderFunnel(er, cr) {
+  var sr=er.filter(function(r){var role=r["What is your role?"];return role==="Setter"||role==="Hybrid"});
+  var dials  = sr.reduce(function(s,r){return s+nv(r["Dials Made Today"]||r["[SETTING] Dials Made Today"])},0);
+  var convos = sr.reduce(function(s,r){return s+nv(r["Conversations Had Today"]||r["[SETTING] Conversations Had Today"])},0);
+  var sets   = sr.reduce(function(s,r){
+    return s+nv(r["How Many Sets Made Today"]||r["[SETTING] Calls You Self-Set For Today"]||0)
+             +nv(r["[SETTING] Calls You Set For Other Closers Today"]||0);
+  },0);
+  var shd    = sr.reduce(function(s,r){return s+nv(r["Of Those Scheduled Calls, How Many Showed?"])},0);
+  var cl     = cr.filter(function(r){return isClosed(r["Call Outcome"])}).length;
+
+  var steps=[
+    {label:"Dials",         n:Math.round(dials),  conv:""},
+    {label:"Conversations", n:Math.round(convos), conv:pct(convos,dials)+"%"},
+    {label:"Sets Booked",   n:Math.round(sets),   conv:pct(sets,convos)+"%"},
+    {label:"Showed",        n:Math.round(shd),    conv:pct(shd,sets)+"%"},
+    {label:"Closed",        n:cl,                 conv:pct(cl,shd)+"%"},
+  ];
+  var maxN=Math.max.apply(null,steps.map(function(s){return s.n}))||1;
+  document.getElementById("setterFunnel").innerHTML=steps.map(function(s){
+    return'<div class="fr">'
+      +'<div class="fnum">'+s.n+'</div>'
+      +'<div><div class="flbl">'+s.label+'</div>'
+      +'<div class="fbar"><div class="fbarfill" style="width:'+pct(s.n,maxN)+'%"></div></div></div>'
+      +'<div class="fconv">'+s.conv+'</div></div>';
+  }).join("");
+}
+
+/* ── Source Chart ── */
+function renderSourceChart(cr) {
+  var src={};
+  cr.forEach(function(r){
+    var s=r["Lead Source"]||"Unknown";
+    if(!src[s])src[s]={total:0,cl:0};
+    src[s].total++;
+    if(isClosed(r["Call Outcome"]))src[s].cl++;
+  });
+  var keys=Object.keys(src).sort(function(a,b){return pct(src[b].cl,src[b].total)-pct(src[a].cl,src[a].total)});
+  if(!keys.length){document.getElementById("sourceChart").innerHTML='<div class="ld" style="height:40px">No data yet</div>';return}
+  document.getElementById("sourceChart").innerHTML=keys.map(function(k){
+    var s=src[k],p=pct(s.cl,s.total);
+    return'<div class="br"><div class="bn">'+k+'</div>'
+      +'<div class="bt"><div class="bf" style="width:'+p+'%"><span>'+p+'%</span></div></div>'
+      +'<div class="bv">'+s.cl+'/'+s.total+'</div></div>';
+  }).join("");
+}
+
+/* ── Revenue Chart ── */
+function renderRevenueChart(cr) {
+  var byd={};
+  cr.forEach(function(r){
+    var d=ds(r["Date Call Was Taken"]);
+    if(d==="—")return;
+    var cash=nv(r["Cash Collected Today (£) — enter 0 if none"]);
+    byd[d]=(byd[d]||0)+cash;
+  });
+  var days=Object.keys(byd).sort().slice(-7);
+  if(!days.length){document.getElementById("revenueChart").innerHTML='<div class="ld" style="height:40px">No data yet</div>';return}
+  var maxV=Math.max.apply(null,days.map(function(d){return byd[d]}))||1;
+  document.getElementById("revenueChart").innerHTML=days.map(function(d){
+    var val=byd[d],p=pct(val,maxV);
+    return'<div class="br"><div class="bn">'+d.substring(5)+'</div>'
+      +'<div class="bt"><div class="bf" style="width:'+p+'%"><span>£'+fmt(val)+'</span></div></div>'
+      +'<div class="bv">£'+fmt(val)+'</div></div>';
+  }).join("");
+}
+
+/* ── Recent Table ── */
+function renderTable(cr) {
+  var recent=cr.slice().reverse().slice(0,25);
+  if(!recent.length){
+    document.getElementById("recentBody").innerHTML=
+      '<tr><td colspan="8" style="text-align:center;color:var(--dim);padding:28px">No calls logged yet — submit the first per-call report to see data here.</td></tr>';
+    return;
+  }
+  document.getElementById("recentBody").innerHTML=recent.map(function(r){
+    var o=r["Call Outcome"]||"—";
+    return'<tr>'
+      +'<td class="s">'+ds(r["Date Call Was Taken"])+'</td>'
+      +'<td class="s">'+(r["Closer Name"]||"—")+'</td>'
+      +'<td>'+(r["Setter Name (who set this call?)"]||"—")+'</td>'
+      +'<td>'+(r["Lead Source"]||"—")+'</td>'
+      +'<td><span class="'+bc(o)+'">'+o+'</span></td>'
+      +'<td>'+(r["Offer Made?"]==="Yes"?'<span style="color:var(--or)">Yes</span>':(r["Offer Made?"]||"—"))+'</td>'
+      +'<td class="s">£'+nv(r["Cash Collected Today (£) — enter 0 if none"])+'</td>'
+      +'<td>£'+nv(r["Total Contract Value / Revenue Generated (£) — enter 0 if none"])+'</td>'
+      +'</tr>';
+  }).join("");
+}
+
+/* ── MAIN ── */
+function showErr(msg){
+  var b=document.getElementById("errBanner");
+  b.style.display="block";
+  b.innerHTML=msg;
+}
+
+function refresh() {
+  Promise.all([
+    fetchCSV(CALL_PUB, 0),
+    fetchCSV(EOD_PUB, 0)
+  ])
+  .then(function(res){
+    var cr=res[0], er=res[1];
+
+    /* if first data row has no recognisable columns, try gid=1 (tab might not be first) */
+    var hasCols = cr.length>0 && cr[0].hasOwnProperty("Call Outcome");
+    if(!hasCols && cr.length>0){
+      /* sheet loaded but columns look like raw form responses — still proceed */
+    }
+
+    renderKPIs(cr, er);
+    renderVersus(cr);
+    renderOutcomes(cr);
+    renderFunnel(er, cr);
+    renderSourceChart(cr);
+    renderRevenueChart(cr);
+    renderTable(cr);
+
+    var now=new Date();
+    document.getElementById("rt").textContent=
+      "Updated "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+
+    document.getElementById("errBanner").style.display="none";
+  })
+  .catch(function(e){
+    console.error(e);
+    showErr(
+      "⚠ Could not load sheet data. Make sure both sheets are published:<br>"
+      +"Open each sheet → File → Share → <strong>Publish to web</strong> → Entire Document → Publish.<br>"
+      +"Error: "+e.message
+    );
+    document.getElementById("rt").textContent="⚠ Load error";
+  });
+}
+
+refresh();
+setInterval(refresh, 120000);
+</script>
+</body>
+</html>
